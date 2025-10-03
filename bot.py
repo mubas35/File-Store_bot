@@ -127,12 +127,12 @@ async def file_handler(client: Client, message: Message):
         )
     except Exception as e:
         logging.error(f"File handling error: {e}")
-        await status_msg.edit_text(f"❌ **Error!**\n\nKuch galat ho gaya. Please try again.\n`Details: {e}`")
+        await status_msg.edit_text(f"❌ **Error!**\n\nKuch কিছু সমস্যা হয়েছে। Please try again.\n`Details: {e}`")
 
 @app.on_message(filters.command("settings") & filters.private)
 async def settings_handler(client: Client, message: Message):
     if message.from_user.id not in ADMINS:
-        await message.reply("❌ Aapke paas is command ko use karne ki permission nahi hai.")
+        await message.reply("❌ আপনার এই কমান্ডটি ব্যবহার করার অনুমতি নেই।")
         return
     
     current_mode = await get_bot_mode()
@@ -143,10 +143,10 @@ async def settings_handler(client: Client, message: Message):
     
     await message.reply(
         f"⚙️ **Bot Settings**\n\n"
-        f"Abhi bot ka file upload mode **{current_mode.upper()}** hai.\n\n"
-        f"**Public:** Koi bhi file bhej kar link bana sakta hai.\n"
-        f"**Private:** Sirf admins hi file bhej sakte hain.\n\n"
-        f"Naya mode select karein:",
+        f"এখন! বটের ফাইল আপলোড mode **{current_mode.upper()}** hai.\n\n"
+        f"**Public:** যে কেউ ফাইল পাঠিয়ে লিঙ্ক তৈরি করতে পারবেন\n"
+        f"**Private:** শুধুমাত্র অ্যাডমিনরাই ফাইল পাঠাতে পারবেন।.\n\n"
+        f"একটি নতুন মোড Select করুন:",
         reply_markup=keyboard
     )
 
@@ -173,7 +173,7 @@ async def set_mode_callback(client: Client, callback_query: CallbackQuery):
     await callback_query.message.edit_text(
         f"⚙️ **Bot Settings**\n\n"
         f"✅ Bot ka file upload mode ab **{new_mode.upper()}** hai.\n\n"
-        f"Naya mode select karein:",
+        f"একটি নতুন মোড Select করুন:",
         reply_markup=keyboard
     )
 
@@ -183,25 +183,25 @@ async def check_join_callback(client: Client, callback_query: CallbackQuery):
     file_id_str = callback_query.data.split("_", 2)[2]
 
     if await is_user_member(client, user_id):
-        await callback_query.answer("Thanks for joining! File bhej raha hu...", show_alert=True)
+        await callback_query.answer("Thanks for joining! আমি ফাইলটি পাঠাচ্ছি।...", show_alert=True)
         file_record = files_collection.find_one({"_id": file_id_str})
         if file_record:
             try:
                 await client.copy_message(chat_id=user_id, from_chat_id=LOG_CHANNEL, message_id=file_record['message_id'])
                 await callback_query.message.delete()
             except Exception as e:
-                await callback_query.message.edit_text(f"❌ File bhejte waqt error aa gaya.\n`Error: {e}`")
+                await callback_query.message.edit_text(f"❌ ফাইলটি পাঠানোর সময় একটি ত্রুটি ঘটেছে।.\n`Error: {e}`")
         else:
             await callback_query.message.edit_text("🤔 File not found!")
     else:
-        await callback_query.answer("Aapne abhi tak channel join nahi kiya hai. Please join karke dobara try karein.", show_alert=True)
+        await callback_query.answer("আপনি এখনও চ্যানেলে join করেননি।. Please join করুন এবং আবার চেষ্টা করুন।.", show_alert=True)
 
 # --- Bot ko Start Karo ---
 if __name__ == "__main__":
     if not ADMINS:
-        logging.warning("WARNING: ADMIN_IDS is not set. Settings command kaam nahi karega.")
+        logging.warning("WARNING: ADMIN_IDS is not set. Settings command কাজ করবে না.")
     
-    # Flask server ko ek alag thread me start karo
+    # Flask server এটি একটি পৃথক থ্রেডে start করুন
     logging.info("Starting Flask web server...")
     flask_thread = Thread(target=run_flask)
     flask_thread.start()
