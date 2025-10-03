@@ -90,7 +90,7 @@ async def start_handler(client: Client, message: Message):
             keyboard = InlineKeyboardMarkup([[join_button], [joined_button]])
             
             await message.reply(
-                f"👋 **Hello, {message.from_user.first_name}!**\n\nYe file access karne ke liye, aapko hamara update channel join karna hoga.",
+                f"👋 **Hello, {message.from_user.first_name}!**\n\এই ফাইলগুলি অ্যাক্সেস করতে, আপনাকে আমাদের আপডেট চ্যানেলে join করতে হবে।",
                 reply_markup=keyboard
             )
             return
@@ -100,20 +100,20 @@ async def start_handler(client: Client, message: Message):
             try:
                 await client.copy_message(chat_id=message.from_user.id, from_chat_id=LOG_CHANNEL, message_id=file_record['message_id'])
             except Exception as e:
-                await message.reply(f"❌ Sorry, file bhejte waqt ek error aa gaya.\n`Error: {e}`")
+                await message.reply(f"❌ Sorry , ফাইলটি পাঠানোর সময় একটি ত্রুটি ঘটেছে।\n`Error: {e}`")
         else:
-            await message.reply("🤔 File not found! Ho sakta hai link galat ya expire ho gaya ho.")
+            await message.reply("🤔 ফাইলটি খুঁজে পাওয়া যায়নি! লিঙ্কটি ভুল অথবা মেয়াদোত্তীর্ণ হতে পারে।")
     else:
-        await message.reply("**হ্যালো! আমি একজন ফাইল-টু-লিঙ্ক বট।**\n\nMujhe koi bhi file bhejo, aur mai aapko uska ek shareable link dunga.")
+        await message.reply("**হ্যালো! আমি একজন ফাইল-টু-লিঙ্ক বট।**\n\যেকোনো ফাইল আমাকে পাঠান, আমি আপনাকে দ্রুত একটি লিঙ্ক দেব।")
 
 @app.on_message(filters.private & (filters.document | filters.video | filters.photo | filters.audio))
 async def file_handler(client: Client, message: Message):
     bot_mode = await get_bot_mode()
     if bot_mode == "private" and message.from_user.id not in ADMINS:
-        await message.reply("😔 **Sorry!** Abhi sirf Admins hi files upload kar sakte hain.")
+        await message.reply("😔 **Sorry!** বর্তমানে, শুধুমাত্র অ্যাডমিনরাই ফাইল আপলোড করতে পারবেন।)
         return
 
-    status_msg = await message.reply("⏳ Please wait, file upload kar raha hu...", quote=True)
+    status_msg = await message.reply("⏳ Please অপেক্ষা করুন, ফাইল আপলোড হচ্ছে।...", quote=True)
     
     try:
         forwarded_message = await message.forward(LOG_CHANNEL)
