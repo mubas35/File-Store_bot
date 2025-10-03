@@ -104,7 +104,7 @@ async def start_handler(client: Client, message: Message):
         else:
             await message.reply("🤔 File not found! Ho sakta hai link galat ya expire ho gaya ho.")
     else:
-        await message.reply("**Hello! Mai ek File-to-Link bot hu.**\n\nMujhe koi bhi file bhejo, aur mai aapko uska ek shareable link dunga.")
+        await message.reply("**হ্যালো! আমি একজন ফাইল-টু-লিঙ্ক বট।**\n\nMujhe koi bhi file bhejo, aur mai aapko uska ek shareable link dunga.")
 
 @app.on_message(filters.private & (filters.document | filters.video | filters.photo | filters.audio))
 async def file_handler(client: Client, message: Message):
